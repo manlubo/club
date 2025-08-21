@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: club
+  config:
+    import:
+      - optional:classpath:secret/db.yml
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      database-platform: org.hibernate.dialect.MariaDBDialect
+    properties:
+      hibernate:
+        format_sql: true
+  thymeleaf:
+    cache: false
+logging:
+  level:
+    org.springframework.security.web: trace
+    com.gitbaby: debug
