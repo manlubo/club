@@ -4,6 +4,7 @@ spring:
   config:
     import:
       - optional:classpath:secret/db.yml
+      - optional:classpath:secret/auth.yml
   jpa:
     show-sql: true
     hibernate:
@@ -14,6 +15,8 @@ spring:
         format_sql: true
   thymeleaf:
     cache: false
+  profiles:
+    include: oauth
 logging:
   level:
     org.springframework.security.web: trace

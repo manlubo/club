@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -47,7 +48,8 @@ public class ClubMemberRepositoryTest {
   @Test
   @DisplayName("회원 조회")
   public void testFindByEmail() {
-    Optional<ClubMember> result = repository.findByEmail("user99@gmail.com", false);
+//    Optional<ClubMember> result = repository.findByEmail("user99@gmail.com", false);
+    Optional<ClubMember> result = repository.findByEmailAndFromSocial("user99@gmail.com", false);
     ClubMember member = result.orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾지 못했습니다."));
     log.info(member);
   }
