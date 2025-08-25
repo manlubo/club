@@ -1,6 +1,6 @@
-package com.gitbaby.club.service;
+package com.gitbaby.club.security.service;
 
-import com.gitbaby.club.domain.dto.ClubAuthMemberDTO;
+import com.gitbaby.club.security.dto.ClubAuthMemberDTO;
 import com.gitbaby.club.domain.entity.ClubMember;
 import com.gitbaby.club.repository.ClubMemberRepository;
 import lombok.RequiredArgsConstructor;

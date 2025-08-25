@@ -1,14 +1,11 @@
-package com.gitbaby.club.handler;
+package com.gitbaby.club.security.handler;
 
-import com.gitbaby.club.domain.dto.ClubAuthMemberDTO;
-import jakarta.servlet.FilterChain;
+import com.gitbaby.club.security.dto.ClubAuthMemberDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;

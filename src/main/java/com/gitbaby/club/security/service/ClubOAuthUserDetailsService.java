@@ -1,6 +1,6 @@
-package com.gitbaby.club.service;
+package com.gitbaby.club.security.service;
 
-import com.gitbaby.club.domain.dto.ClubAuthMemberDTO;
+import com.gitbaby.club.security.dto.ClubAuthMemberDTO;
 import com.gitbaby.club.domain.entity.ClubMember;
 import com.gitbaby.club.domain.entity.ClubMemberRole;
 import com.gitbaby.club.repository.ClubMemberRepository;
@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 

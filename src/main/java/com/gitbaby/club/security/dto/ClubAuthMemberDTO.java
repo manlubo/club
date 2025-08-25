@@ -1,4 +1,4 @@
-package com.gitbaby.club.domain.dto;
+package com.gitbaby.club.security.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class ClubAuthMemberDTO extends User implements OAuth2User {
   private String name;
   private String password;
   private boolean fromSocial;
-  private Map<String, Object> attr;
+  private Map<String, Object> attributes;
 
   public ClubAuthMemberDTO(
           String username,
@@ -30,7 +30,7 @@ public class ClubAuthMemberDTO extends User implements OAuth2User {
           Map<String, Object> attr) {
     this(username, password, fromSocial, authorities);
     this.password = password;
-    this.attr = attr;
+    this.attributes  = attr;
   }
 
   public ClubAuthMemberDTO(String username, String password, boolean fromSocial, Collection<? extends GrantedAuthority> authorities) {
@@ -41,7 +41,8 @@ public class ClubAuthMemberDTO extends User implements OAuth2User {
   }
 
   @Override
-  public Map<String, Object> getAttributes() {
-    return this.attr;
+  public String getName() {
+    return attributes == null ? name : (String) attributes.get("email");
   }
+
 }
