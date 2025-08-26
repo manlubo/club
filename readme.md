@@ -48,3 +48,7 @@
 ### [Swagger UI]
 - springdoc 기준 기본 URL → `http://localhost:8080/swagger-ui/index.html`
 - API 문서 JSON → `/v3/api-docs`
+
+### [JWT 인증 처리]
+- 토큰값 기반 로그인
+- 토큰값 세션등록

@@ -5,6 +5,7 @@ import com.gitbaby.club.security.filter.ApiCheckFilter;
 import com.gitbaby.club.security.filter.ApiLoginFilter;
 import com.gitbaby.club.security.handler.ClubLoginSuccessHandler;
 import com.gitbaby.club.security.service.ClubUserDetailsService;
+import com.gitbaby.club.util.JWTUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -47,12 +48,12 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-    ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login");
+    ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login", jwtUtil());
     apiLoginFilter.setAuthenticationManager(authenticationManager);
 
     http
             .authorizeHttpRequests(auth -> {
-              auth.requestMatchers("sample/all", "error", "note/**", "swagger-ui/**", "api/login/**").permitAll()
+              auth.requestMatchers("sample/all", "error", "note/**", "swagger-ui/**", "api/**").permitAll()
                       .requestMatchers("member/modify").hasRole("USER")
                       .requestMatchers("sample/admin").hasRole("ADMIN")
                       .anyRequest().authenticated();
@@ -84,6 +85,11 @@ public class SecurityConfig {
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
     return config.getAuthenticationManager();
+  }
+
+  @Bean
+  public JWTUtil jwtUtil() {
+    return new JWTUtil();
   }
 }
 

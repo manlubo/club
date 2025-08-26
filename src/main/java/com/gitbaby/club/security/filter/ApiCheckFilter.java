@@ -1,11 +1,13 @@
 package com.gitbaby.club.security.filter;
 
+import com.gitbaby.club.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,6 +20,9 @@ public class ApiCheckFilter extends OncePerRequestFilter {
 
   private AntPathMatcher antPathMatcher; // spring 경로 패턴 체크 클래스
   private String pattern;
+  @Autowired
+  private JWTUtil jwtUtil;
+
 
   public ApiCheckFilter(String pattern) {
     this.antPathMatcher = new AntPathMatcher();
@@ -57,15 +62,24 @@ public class ApiCheckFilter extends OncePerRequestFilter {
   private boolean checkAuthHeader(HttpServletRequest request) {
     boolean checkResult = false;
     String authHeader = request.getHeader("Authorization");
-    if (StringUtils.hasText(authHeader)) {
+//    if (StringUtils.hasText(authHeader)) {
+//      log.info("Authorization exist: {}", authHeader);
+//
+//      if(authHeader.equals("12345678")){
+//        checkResult = true;
+//      }
+//
+//    }
+    if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
       log.info("Authorization exist: {}", authHeader);
-
-      if(authHeader.equals("12345678")){
-        checkResult = true;
+      try{
+        String email = jwtUtil.validateAndExtract(authHeader.substring("Bearer ".length()));
+        log.info("validate result: {}", email);
+        checkResult = !email.isEmpty();
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-
     }
-
 
     return checkResult;
   }

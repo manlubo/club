@@ -20,15 +20,17 @@ import java.util.stream.Collectors;
 public class ClubUserDetailsService implements UserDetailsService {
   private final ClubMemberRepository repository;
 
+
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    log.info("loadUserByUsername: " + username);
     Optional<ClubMember> result = repository.findByEmailAndFromSocial(username, false);
     ClubMember member = result.orElseThrow(() -> new UsernameNotFoundException(username + " is not found"));
+    log.info("loadUserByUsername: " + member.getEmail());
     log.info("======================");
     log.info("member: " + member);
 
     ClubAuthMemberDTO clubAuthMember = new ClubAuthMemberDTO (
+            member.getMno(),
             member.getEmail(),
             member.getPassword(),
             member.isFromSocial(),
@@ -38,4 +40,19 @@ public class ClubUserDetailsService implements UserDetailsService {
 
             return clubAuthMember;
   }
+
+  public ClubAuthMemberDTO getAuthDTO(Long mno) {
+    ClubMember member = repository.findById(mno).orElseThrow(() -> new UsernameNotFoundException(mno + " is not found"));
+    ClubAuthMemberDTO dto =  new ClubAuthMemberDTO(
+            member.getMno(),
+            member.getEmail(),
+            member.getPassword(),
+            member.isFromSocial(),
+            member.getRoleSet().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())).collect(Collectors.toSet())
+            );
+    dto.setName(member.getName());
+
+    return dto;
+  }
+
 }

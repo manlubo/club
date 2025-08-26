@@ -54,6 +54,7 @@ public class ClubOAuthUserDetailsService extends DefaultOAuth2UserService {
             .collect(Collectors.toList());
 
     return new ClubAuthMemberDTO(
+            member.getMno(),
             member.getEmail(),
             member.getPassword() != null ? member.getPassword() : "1111",
             member.isFromSocial(),
