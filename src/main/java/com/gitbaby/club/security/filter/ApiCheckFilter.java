@@ -8,12 +8,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 
 @Log4j2
 public class ApiCheckFilter extends OncePerRequestFilter {
@@ -73,9 +77,19 @@ public class ApiCheckFilter extends OncePerRequestFilter {
     if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
       log.info("Authorization exist: {}", authHeader);
       try{
-        String email = jwtUtil.validateAndExtract(authHeader.substring("Bearer ".length()));
-        log.info("validate result: {}", email);
-        checkResult = !email.isEmpty();
+        String mno = jwtUtil.validateAndExtract(authHeader.substring("Bearer ".length()));
+        log.info("validate result: {}", mno);
+        if(!mno.isEmpty()){
+          // Authentication 객체 생성
+          UsernamePasswordAuthenticationToken authentication =
+                  new UsernamePasswordAuthenticationToken(
+                         mno, null, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
+                  );
+          // SecurityContext에 저장
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+
+          checkResult = true;
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }

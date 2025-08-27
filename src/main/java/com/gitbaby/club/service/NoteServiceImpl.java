@@ -6,6 +6,9 @@ import com.gitbaby.club.domain.mapper.NoteMapper;
 import com.gitbaby.club.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +32,9 @@ public class NoteServiceImpl implements NoteService{
   }
 
   @Override
+  @PostAuthorize("returnObject.writerMno.toString() == authentication.principal")
   public NoteDTO get(Long num) {
+
     Optional<Note> result = repository.getWithWriter(num);
     if(result.isPresent()) {
       return toDTO(result.orElseThrow(() -> new IllegalArgumentException("해당 인스턴스를 찾을 수 없습니다.")));

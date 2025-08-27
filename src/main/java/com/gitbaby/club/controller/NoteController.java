@@ -25,6 +25,7 @@ public class NoteController {
     return ResponseEntity.ok(service.register(dto));
   }
 
+
   @GetMapping(value = "{num}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> read(@PathVariable Long num) {
     log.info("==================================read");

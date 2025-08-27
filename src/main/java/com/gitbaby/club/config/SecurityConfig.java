@@ -53,15 +53,13 @@ public class SecurityConfig {
 
     http
             .authorizeHttpRequests(auth -> {
-              auth.requestMatchers("sample/all", "error", "note/**", "swagger-ui/**", "api/**").permitAll()
-                      .requestMatchers("member/modify").hasRole("USER")
-                      .requestMatchers("sample/admin").hasRole("ADMIN")
+              auth.requestMatchers("/sample/all", "/error",  "/swagger-ui/**", "/api/**").permitAll()
+                      .requestMatchers("/member/modify").hasRole("USER")
+                      .requestMatchers("/sample/admin").hasRole("ADMIN")
                       .anyRequest().authenticated();
             })
             .csrf(AbstractHttpConfigurer::disable)
-            .formLogin(form ->
-                    form.defaultSuccessUrl("/sample/all", false))
-                        .logout(Customizer.withDefaults())
+            .formLogin(AbstractHttpConfigurer::disable)
             .oauth2Login(form -> form.defaultSuccessUrl("/sample/all", false)
                     .successHandler(successHandler()))
             .rememberMe(auth -> auth.tokenValiditySeconds(60*2)
