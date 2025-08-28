@@ -1,5 +1,6 @@
 package com.gitbaby.club.security.filter;
 
+import com.gitbaby.club.security.service.ClubUserDetailsService;
 import com.gitbaby.club.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,7 +23,8 @@ import java.util.Collections;
 
 @Log4j2
 public class ApiCheckFilter extends OncePerRequestFilter {
-
+  @Autowired
+  private ClubUserDetailsService clubUserDetailsService;
   private AntPathMatcher antPathMatcher; // spring 경로 패턴 체크 클래스
   private String pattern;
   @Autowired
@@ -80,10 +83,12 @@ public class ApiCheckFilter extends OncePerRequestFilter {
         String mno = jwtUtil.validateAndExtract(authHeader.substring("Bearer ".length()));
         log.info("validate result: {}", mno);
         if(!mno.isEmpty()){
-          // Authentication 객체 생성
+          // Authentication 객체 생성 - jwtToken에 저장된 내용으로 Security Context에 담음
+          UserDetails userDetails = clubUserDetailsService.getAuthDTO(Long.valueOf(mno));
+          log.info("userDetails: {}", userDetails);
           UsernamePasswordAuthenticationToken authentication =
                   new UsernamePasswordAuthenticationToken(
-                         mno, null, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
+                         userDetails, null, userDetails.getAuthorities()
                   );
           // SecurityContext에 저장
           SecurityContextHolder.getContext().setAuthentication(authentication);

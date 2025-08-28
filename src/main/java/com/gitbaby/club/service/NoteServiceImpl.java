@@ -32,14 +32,10 @@ public class NoteServiceImpl implements NoteService{
   }
 
   @Override
-  @PostAuthorize("returnObject.writerMno.toString() == authentication.principal")
+  @PostAuthorize("returnObject.writerMno == authentication.principal.mno")
   public NoteDTO get(Long num) {
 
-    Optional<Note> result = repository.getWithWriter(num);
-    if(result.isPresent()) {
-      return toDTO(result.orElseThrow(() -> new IllegalArgumentException("해당 인스턴스를 찾을 수 없습니다.")));
-    }
-    return null;
+    return repository.getWithWriter(num).map(mapper::toDto).orElseThrow(() -> new IllegalArgumentException("해당 인스턴스를 찾을 수 없습니다."));
   }
 
   @Override

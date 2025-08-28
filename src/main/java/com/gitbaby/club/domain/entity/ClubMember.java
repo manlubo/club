@@ -24,7 +24,7 @@ public class ClubMember extends BaseEntity {
   private boolean fromSocial;
 
   @Builder.Default
-  @ElementCollection(fetch = FetchType.LAZY)
+  @ElementCollection(fetch = FetchType.EAGER)
   private Set<ClubMemberRole> roleSet = new HashSet<>();
 
   public void addMemberRole(ClubMemberRole role) {
